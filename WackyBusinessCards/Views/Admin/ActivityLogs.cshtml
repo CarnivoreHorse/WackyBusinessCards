@@ -1,0 +1,88 @@
+@model List<WackyBusinessCards.Models.ActivityLog>
+@{
+    ViewData["Title"] = "Activity Logs";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Activity Logs</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">System Activity</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="activityTable">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Entity Type</th>
+                            <th>Entity ID</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model)
+                        {
+                            <tr>
+                                <td>@log.Timestamp.ToString("g")</td>
+                                <td>
+                                    @if (log.User != null)
+                                    {
+                                        <a asp-action="UserDetails" asp-route-id="@log.UserId">
+                                            @($"{log.User.FirstName} {log.User.LastName}".Trim())
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>@log.UserId</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge @GetBadgeClass(log.Action)">@log.Action</span>
+                                </td>
+                                <td>@log.EntityType</td>
+                                <td>@log.EntityId</td>
+                                <td>@log.Details</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#activityTable').DataTable({
+                "order": [[0, "desc"]], // Sort by timestamp by default
+                "pageLength": 25
+            });
+        });
+    </script>
+}
+
+@functions {
+    public string GetBadgeClass(string action)
+    {
+        return action switch
+        {
+            var a when a.Contains("Create") => "bg-success",
+            var a when a.Contains("Update") || a.Contains("Edit") => "bg-primary",
+            var a when a.Contains("Delete") || a.Contains("Remove") => "bg-danger",
+            var a when a.Contains("Login") || a.Contains("Logout") => "bg-info",
+            var a when a.Contains("Added") => "bg-success",
+            var a when a.Contains("Removed") => "bg-warning",
+            _ => "bg-secondary"
+        };
+    }
+}

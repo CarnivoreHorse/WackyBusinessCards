@@ -1,0 +1,103 @@
+@model UserProfileViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="@Model.GetProfilePictureUrl()"
+                             alt="@($"{Model.FirstName} {Model.LastName}".Trim())"
+                             class="rounded-circle img-fluid"
+                             style="width: 150px; height: 150px; object-fit: cover;">
+
+                        <h5 class="my-3">@($"{Model.FirstName} {Model.LastName}".Trim())</h5>
+                    </div>
+
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Email" />
+                        <input type="hidden" asp-for="UserName" />
+                        <input type="hidden" asp-for="ProfilePicturePath" />
+
+                        <div class="form-group mb-4">
+                            <label asp-for="ProfilePictureFile" class="form-label"></label>
+                            <input asp-for="ProfilePictureFile" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="ProfilePictureFile" class="text-danger"></span>
+                            <small class="form-text text-muted">
+                                Upload a new profile picture. Allowed formats: JPG, PNG, GIF. Maximum size: 5MB.
+                            </small>
+
+                            @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
+                            {
+                                <div class="mt-2">
+                                    <a href="javascript:void(0);" onclick="document.getElementById('deleteProfilePictureForm').submit();" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Remove Profile Picture
+                                    </a>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FirstName" class="form-label"></label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="LastName" class="form-label"></label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" disabled />
+                            <small class="form-text text-muted">Email cannot be changed directly. Please contact support if you need to change your email.</small>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="UserName" class="form-label"></label>
+                            <input asp-for="UserName" class="form-control" disabled />
+                            <small class="form-text text-muted">Username cannot be changed.</small>
+                        </div>
+
+                        <div class="form-group d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Profile
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<form asp-action="DeleteProfilePicture" method="post" id="deleteProfilePictureForm" style="display: none;">
+</form>

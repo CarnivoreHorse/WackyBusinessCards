@@ -1,0 +1,161 @@
+@model List<WackyBusinessCards.ViewModels.UserViewModel>
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>User Management</h1>
+        <div>
+            <a asp-action="CreateUser" class="btn btn-success me-2">
+                <i class="bi bi-person-plus"></i> Create New User
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">All Users</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Roles</th>
+                            <th>Cards</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.FullName</td>
+                                <td>@user.Email</td>
+                                <td>@user.UserName</td>
+                                <td>
+                                    @foreach (var role in user.Roles)
+                                    {
+                                        <span class="badge @(role == "Admin" ? "bg-danger" : "bg-primary")">@role</span>
+                                    }
+                                </td>
+                                <td>@user.BusinessCardCount</td>
+                                <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                        @if (!user.Roles.Contains("Admin"))
+                                        {
+                                            <form asp-action="MakeAdmin" method="post" class="d-inline">
+                                                <input type="hidden" name="userId" value="@user.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to make this user an admin? This will grant them full access to the system.');">
+                                                    <i class="bi bi-shield-fill"></i> Make Admin
+                                                </button>
+                                            </form>
+                                        }
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteUserModal"
+                                                data-user-id="@user.Id"
+                                                data-user-name="@user.FullName"
+                                                data-user-email="@user.Email">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteUserModalLabel">Confirm User Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Warning: This action cannot be undone.
+                </div>
+                <p>Are you sure you want to delete the following user?</p>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p><strong>Name:</strong> <span id="userName"></span></p>
+                        <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                    </div>
+                </div>
+                <p>This will permanently delete:</p>
+                <ul>
+                    <li>The user account</li>
+                    <li>All business cards created by this user</li>
+                    <li>All activity logs associated with this user</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="DeleteUser" method="post">
+                    <input type="hidden" id="deleteUserId" name="userId" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete User
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#usersTable').DataTable({
+                "order": [[5, "desc"]] // Sort by joined date by default
+            });
+
+            // Handle delete user modal
+            $('#deleteUserModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var userId = button.data('user-id');
+                var userName = button.data('user-name');
+                var userEmail = button.data('user-email');
+
+                var modal = $(this);
+                modal.find('#deleteUserId').val(userId);
+                modal.find('#userName').text(userName);
+                modal.find('#userEmail').text(userEmail);
+            });
+        });
+    </script>
+}

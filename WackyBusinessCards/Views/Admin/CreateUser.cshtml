@@ -1,0 +1,302 @@
+@model WackyBusinessCards.ViewModels.CreateUserViewModel
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Create New User</h1>
+        <a asp-action="Users" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Users
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">User Information</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateUser" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FirstName" class="form-label"></label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="LastName" class="form-label"></label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="JobTitle" class="form-label"></label>
+                                    <input asp-for="JobTitle" class="form-control" />
+                                    <span asp-validation-for="JobTitle" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Company" class="form-label"></label>
+                                    <input asp-for="Company" class="form-control" />
+                                    <span asp-validation-for="Company" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Bio" class="form-label"></label>
+                            <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Bio" class="text-danger"></span>
+                            <div class="form-text">A brief description about the user (max 500 characters)</div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="ProfilePicture" class="form-label"></label>
+                            <input asp-for="ProfilePicture" class="form-control" type="file" accept="image/*" />
+                            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                            <div class="form-text">Upload a profile picture (optional)</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Password" class="form-label"></label>
+                                    <input asp-for="Password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                                    <input asp-for="ConfirmPassword" class="form-control" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Account Settings</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check mb-2 checkbox-container">
+                                            <input asp-for="EmailConfirmed" class="form-check-input visible-checkbox" id="emailConfirmedCheckbox" />
+                                            <label asp-for="EmailConfirmed" class="form-check-label" for="emailConfirmedCheckbox">Email Already Confirmed</label>
+                                            <div class="form-text">Skip email verification process</div>
+                                        </div>
+
+                                        <div class="form-check checkbox-container">
+                                            <input asp-for="SendWelcomeEmail" class="form-check-input visible-checkbox" id="sendWelcomeEmailCheckbox" />
+                                            <label asp-for="SendWelcomeEmail" class="form-check-label" for="sendWelcomeEmailCheckbox">Send Welcome Email</label>
+                                            <div class="form-text">Send an email with login instructions</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card border-danger" style="border-width: 2px; box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);">
+                                    <div class="card-header bg-danger text-white">
+                                        <h5 class="mb-0"><i class="bi bi-shield-lock-fill me-2"></i>Admin Privileges</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check checkbox-container">
+                                            <input asp-for="IsAdmin" class="form-check-input visible-checkbox" id="isAdminCheckbox" />
+                                            <label asp-for="IsAdmin" class="form-check-label fw-bold fs-5" for="isAdminCheckbox">Grant Admin Privileges</label>
+                                        </div>
+                                        <div class="form-text mb-2">
+                                            Check this box to make this user an administrator
+                                        </div>
+                                        <div class="alert alert-warning mt-2 mb-0">
+                                            <i class="bi bi-exclamation-triangle-fill"></i> Admin users can:
+                                            <ul class="mb-0 mt-1">
+                                                <li>Access the admin dashboard</li>
+                                                <li>Manage all users and their roles</li>
+                                                <li>View and manage all business cards</li>
+                                                <li>Access system-wide activity logs</li>
+                                                <li>Create other admin users</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Model.AvailableRoles.Count > 2) @* Show only if there are roles beyond Admin and User *@
+                        {
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Additional Roles</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach (var role in Model.AvailableRoles)
+                                        {
+                                            @if (role.Name != "Admin" && role.Name != "User") @* Skip the basic roles that are handled above *@
+                                            {
+                                                <div class="col-md-6 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox"
+                                                               name="SelectedRoles"
+                                                               value="@role.Name"
+                                                               id="role_@role.Id"
+                                                               class="form-check-input" />
+                                                        <label for="role_@role.Id" class="form-check-label">
+                                                            @role.Name
+                                                            <small class="d-block text-muted">@role.Description</small>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-plus"></i> Create User
+                            </button>
+                            <a asp-action="Users" class="btn btn-secondary">
+                                <i class="bi bi-x"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Highlight the admin checkbox on page load
+        $(document).ready(function() {
+            // Add a pulsing effect to draw attention to the admin checkbox
+            $("#isAdminCheckbox").parent().addClass("highlight-checkbox");
+
+            // Add event listener to change the card border when checkbox is checked/unchecked
+            $("#isAdminCheckbox").change(function() {
+                if($(this).is(":checked")) {
+                    $(this).closest(".card").removeClass("border-danger").addClass("border-success");
+                    $(this).closest(".card").find(".card-header").removeClass("bg-danger").addClass("bg-success");
+                } else {
+                    $(this).closest(".card").removeClass("border-success").addClass("border-danger");
+                    $(this).closest(".card").find(".card-header").removeClass("bg-success").addClass("bg-danger");
+                }
+            });
+        });
+    </script>
+
+    <style>
+        /* Fix for invisible checkboxes */
+        input[type="checkbox"],
+        .form-check-input,
+        .visible-checkbox {
+            opacity: 1 !important;
+            position: static !important;
+            pointer-events: auto !important;
+            width: 20px !important;
+            height: 20px !important;
+            margin-right: 8px !important;
+            appearance: auto !important;
+            -webkit-appearance: checkbox !important;
+            -moz-appearance: checkbox !important;
+            border: 1px solid #333 !important;
+            background-color: white !important;
+            display: inline-block !important;
+            visibility: visible !important;
+            z-index: 999 !important;
+        }
+
+        /* Additional styles to ensure visibility */
+        .checkbox-container {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            border: 1px solid #ddd !important;
+            background-color: #f8f9fa !important;
+        }
+
+        /* Make sure labels are properly aligned */
+        .form-check-label {
+            position: relative !important;
+            vertical-align: middle !important;
+            display: inline-block !important;
+            padding-left: 0 !important;
+        }
+
+        /* Ensure form-check has proper spacing */
+        .form-check {
+            display: flex !important;
+            align-items: center !important;
+            padding: 10px !important;
+            background-color: rgba(0,0,0,0.03) !important;
+            border-radius: 5px !important;
+            margin-bottom: 10px !important;
+        }
+
+        /* Highlight the admin checkbox */
+        .highlight-checkbox {
+            animation: pulse 2s infinite;
+            border: 2px dashed #dc3545 !important;
+        }
+
+        @@keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+}

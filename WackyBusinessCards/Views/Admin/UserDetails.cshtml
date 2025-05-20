@@ -1,0 +1,219 @@
+@model WackyBusinessCards.ViewModels.UserDetailsViewModel
+@using WackyBusinessCards.Constants
+@{
+    ViewData["Title"] = $"User Details - {Model.FullName}";
+}
+
+@functions {
+    public string GetBadgeClass(string action)
+    {
+        return action switch
+        {
+            var a when a.Contains("Create") => "bg-success",
+            var a when a.Contains("Update") || a.Contains("Edit") => "bg-primary",
+            var a when a.Contains("Delete") || a.Contains("Remove") => "bg-danger",
+            var a when a.Contains("Login") || a.Contains("Logout") => "bg-info",
+            var a when a.Contains("Added") => "bg-success",
+            var a when a.Contains("Removed") => "bg-warning",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>User Details</h1>
+        <div>
+            <a asp-action="Users" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Users
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img src="@Model.GetProfilePictureUrl()"
+                         alt="@Model.FullName"
+                         class="rounded-circle img-fluid"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    <h5 class="my-3">@Model.FullName</h5>
+                    <p class="text-muted mb-1">@Model.Email</p>
+                    <p class="text-muted mb-4">Member since @Model.CreatedAt.ToString("MMMM yyyy")</p>
+
+                    <div class="mb-3">
+                        @foreach (var role in Model.Roles)
+                        {
+                            <span class="badge @(role == Roles.Admin ? "bg-danger" : "bg-primary") me-1">@role</span>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <form asp-action="ToggleRole" method="post" class="me-2">
+                            <input type="hidden" name="userId" value="@Model.Id" />
+                            <input type="hidden" name="role" value="@Roles.Admin" />
+                            <button type="submit" class="btn @(Model.Roles.Contains(Roles.Admin) ? "btn-outline-danger" : "btn-danger")">
+                                @(Model.Roles.Contains(Roles.Admin) ? "Remove Admin" : "Make Admin")
+                            </button>
+                        </form>
+
+                        <form asp-action="ToggleRole" method="post">
+                            <input type="hidden" name="userId" value="@Model.Id" />
+                            <input type="hidden" name="role" value="@Roles.User" />
+                            <button type="submit" class="btn @(Model.Roles.Contains(Roles.User) ? "btn-outline-primary" : "btn-primary")">
+                                @(Model.Roles.Contains(Roles.User) ? "Remove User Role" : "Add User Role")
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.FullName</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.Email</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Username</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.UserName</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Phone</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Not provided" : Model.PhoneNumber)</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Member Since</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.CreatedAt.ToString("d")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Business Cards (@Model.BusinessCards.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.BusinessCards.Any())
+                    {
+                        <div class="row">
+                            @foreach (var card in Model.BusinessCards)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div style="
+                                                background-color: @card.BackgroundColor;
+                                                color: @card.TextColor;
+                                                font-family: @card.FontFamily;
+                                                border: @card.BorderWidth px @card.BorderStyle @card.BorderColor;
+                                                border-radius: @card.BorderRadius px;
+                                                padding: 15px;
+                                                min-height: 100px;
+                                            ">
+                                                <h5>@card.Name</h5>
+                                                <p>@card.Title</p>
+                                                <p>@card.Company</p>
+                                            </div>
+                                            <div class="mt-2">
+                                                <a asp-controller="Home" asp-action="Details" asp-route-id="@card.Id" class="btn btn-sm btn-primary">
+                                                    <i class="bi bi-eye"></i> View
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">This user has not created any business cards yet.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentActivity.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Action</th>
+                                        <th>Entity Type</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var activity in Model.RecentActivity)
+                                    {
+                                        <tr>
+                                            <td>@activity.Timestamp.ToString("g")</td>
+                                            <td>
+                                                <span class="badge @GetBadgeClass(activity.Action)">@activity.Action</span>
+                                            </td>
+                                            <td>@activity.EntityType</td>
+                                            <td>@activity.Details</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No recent activity for this user.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

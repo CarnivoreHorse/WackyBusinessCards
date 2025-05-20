@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Welcome to Wacky Business Cards!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4e73df;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4e73df;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .credentials {
+            background-color: #f8f9fc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #4e73df;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to Wacky Business Cards!</h1>
+    </div>
+    <div class="content">
+        <p>Hello {{FirstName}} {{LastName}},</p>
+        
+        <p>Welcome to Wacky Business Cards! We're excited to have you join our community of creative business card enthusiasts.</p>
+        
+        <p>Your account has been created successfully. Here are your login credentials:</p>
+        
+        <div class="credentials">
+            <p><strong>Email:</strong> {{Email}}</p>
+            <p><strong>Password:</strong> {{Password}}</p>
+        </div>
+        
+        <p>For security reasons, we recommend changing your password after your first login.</p>
+        
+        <p>With Wacky Business Cards, you can:</p>
+        <ul>
+            <li>Create unique and creative business cards</li>
+            <li>Choose from a variety of styles and templates</li>
+            <li>Customize colors, fonts, and layouts</li>
+            <li>Share your business cards with others</li>
+        </ul>
+        
+        <p>Ready to get started? Click the button below to log in:</p>
+        
+        <a href="{{LoginUrl}}" class="button">Log In Now</a>
+        
+        <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+        
+        <p>Happy card creating!</p>
+        
+        <p>Best regards,<br>The Wacky Business Cards Team</p>
+    </div>
+    <div class="footer">
+        <p>&copy; {{CurrentYear}} Wacky Business Cards. All rights reserved.</p>
+        <p>This email was sent to {{Email}}. If you did not create an account, please disregard this email.</p>
+    </div>
+</body>
+</html>

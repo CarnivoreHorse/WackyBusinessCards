@@ -1,0 +1,99 @@
+@model List<BusinessCard>
+@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "My Business Cards";
+}
+
+@functions {
+    public async Task<string> GetProfilePictureUrlAsync()
+    {
+        var user = await UserManager.GetUserAsync(User);
+        if (user == null || string.IsNullOrEmpty(user.ProfilePicturePath))
+        {
+            return $"https://ui-avatars.com/api/?name={Uri.EscapeDataString(user?.FullName ?? "User")}&background=random&size=256";
+        }
+        return user.ProfilePicturePath;
+    }
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body d-flex align-items-center">
+                    <img src="@(await GetProfilePictureUrlAsync())"
+                         alt="Profile Picture"
+                         class="rounded-circle me-3"
+                         style="width: 60px; height: 60px; object-fit: cover;">
+                    <div>
+                        <h2 class="mb-0">My Business Cards</h2>
+                        <p class="text-muted mb-0">Manage your wacky business card collection</p>
+                    </div>
+                    <div class="ms-auto">
+                        <a asp-controller="Home" asp-action="Create" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Create New Card
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-person"></i> Back to Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <h4>You don't have any business cards yet</h4>
+            <p>Get started by creating your first wacky business card!</p>
+            <a asp-controller="Home" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Business Card
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var card in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div style="
+                                background-color: @card.BackgroundColor;
+                                color: @card.TextColor;
+                                font-family: @card.FontFamily;
+                                border: @card.BorderWidth px @card.BorderStyle @card.BorderColor;
+                                border-radius: @card.BorderRadius px;
+                                transform: @(card.SpecialEffect == "rotate" ? "rotate(-3deg)" : "none");
+                                box-shadow: @(card.SpecialEffect == "shadow" ? "5px 5px 15px rgba(0,0,0,0.4)" : "none");
+                                animation: @(card.SpecialEffect == "sparkle" ? "sparkle 2s infinite" : "none");
+                                padding: 15px;
+                                margin-bottom: 15px;
+                                min-height: 150px;
+                                position: relative;
+                            ">
+                                <h5>@card.Name</h5>
+                                <p>@card.Title</p>
+                                <p>@card.Company</p>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-3">
+                                <a asp-controller="Home" asp-action="Details" asp-route-id="@card.Id" class="btn btn-sm btn-info">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </a>
+                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@card.Id" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <a asp-controller="Home" asp-action="Delete" asp-route-id="@card.Id" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,107 @@
+@model UserProfileViewModel
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img src="@Model.GetProfilePictureUrl()"
+                         alt="@($"{Model.FirstName} {Model.LastName}".Trim())" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    <h5 class="my-3">@($"{Model.FirstName} {Model.LastName}".Trim())</h5>
+                    <p class="text-muted mb-1">@Model.Email</p>
+                    <p class="text-muted mb-4">Member since @Model.MemberSince.ToString("MMMM yyyy")</p>
+                    <div class="d-flex justify-content-center mb-2">
+                        <a asp-action="Edit" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Edit Profile
+                        </a>
+                        <a asp-action="Cards" class="btn btn-outline-primary ms-1">
+                            <i class="bi bi-card-heading"></i> My Cards
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4 mb-lg-0">
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush rounded-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <i class="bi bi-card-heading text-primary"></i>
+                            <p class="mb-0">@Model.BusinessCardCount Business Cards</p>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <i class="bi bi-calendar-date text-primary"></i>
+                            <p class="mb-0">Joined @Model.MemberSince.ToString("d")</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@($"{Model.FirstName} {Model.LastName}".Trim())</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.Email</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Phone</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Not provided" : Model.PhoneNumber)</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Username</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.UserName</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-4 mb-md-0">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-4">
+                                <a asp-controller="Home" asp-action="Create" class="btn btn-success">
+                                    <i class="bi bi-plus-circle"></i> Create New Business Card
+                                </a>
+                            </p>
+                            <p>
+                                <a asp-action="Cards" class="btn btn-outline-primary">
+                                    <i class="bi bi-card-heading"></i> View All My Cards
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

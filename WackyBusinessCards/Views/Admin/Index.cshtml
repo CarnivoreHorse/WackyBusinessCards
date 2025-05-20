@@ -1,0 +1,345 @@
+@model WackyBusinessCards.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Admin Dashboard</h1>
+        <div>
+            <a asp-action="CreateUser" class="btn btn-success">
+                <i class="bi bi-person-plus"></i> Create User
+            </a>
+            <a asp-action="ActivityLogs" class="btn btn-info">
+                <i class="bi bi-activity"></i> Activity Logs
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Total Users</h5>
+                            <h2 class="display-4">@Model.TotalUsers</h2>
+                        </div>
+                        <i class="bi bi-people-fill" style="font-size: 3rem;"></i>
+                    </div>
+                    <a asp-action="Users" class="text-white">View all users <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Business Cards</h5>
+                            <h2 class="display-4">@Model.TotalBusinessCards</h2>
+                        </div>
+                        <i class="bi bi-card-heading" style="font-size: 3rem;"></i>
+                    </div>
+                    <a asp-action="BusinessCards" class="text-white">View all cards <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Administrators</h5>
+                            <h2 class="display-4">@Model.TotalAdmins</h2>
+                        </div>
+                        <i class="bi bi-shield-lock-fill" style="font-size: 3rem;"></i>
+                    </div>
+                    <a asp-action="Users" class="text-white">Manage admins <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Activity Logs</h5>
+                            <h2 class="display-4">@Model.RecentActivity.Count</h2>
+                        </div>
+                        <i class="bi bi-activity" style="font-size: 3rem;"></i>
+                    </div>
+                    <a asp-action="ActivityLogs" class="text-white">View all logs <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">User Growth</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="userGrowthChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Business Card Growth</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="cardGrowthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Activity Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Popular Card Styles</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="styleChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Recent Users</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.RecentUsers)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(user.ProfilePicturePath))
+                                            {
+                                                <img src="@user.ProfilePicturePath" alt="@user.FullName" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                            }
+                                            else
+                                            {
+                                                <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(user.FullName)&size=30" alt="@user.FullName" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                            }
+                                            @user.FullName
+                                        </td>
+                                        <td>@user.Email</td>
+                                        <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                        <td>
+                                            <a asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Users" class="btn btn-primary">View All Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var activity in Model.RecentActivity)
+                                {
+                                    <tr>
+                                        <td>@activity.Timestamp.ToString("g")</td>
+                                        <td>
+                                            @if (activity.User != null)
+                                            {
+                                                <a asp-action="UserDetails" asp-route-id="@activity.UserId">
+                                                    @($"{activity.User.FirstName} {activity.User.LastName}".Trim())
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span>@activity.UserId</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="badge @GetBadgeClass(activity.Action)">@activity.Action</span>
+                                        </td>
+                                        <td>@activity.Details</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="ActivityLogs" class="btn btn-info">View All Activity</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // User Growth Chart
+        const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+        const userGrowthChart = new Chart(userGrowthCtx, {
+            type: 'line',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.UserGrowthData.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    label: 'New Users',
+                    data: [@string.Join(",", Model.UserGrowthData.Values)],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Business Card Growth Chart
+        const cardGrowthCtx = document.getElementById('cardGrowthChart').getContext('2d');
+        const cardGrowthChart = new Chart(cardGrowthCtx, {
+            type: 'line',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.CardGrowthData.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    label: 'New Business Cards',
+                    data: [@string.Join(",", Model.CardGrowthData.Values)],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Activity Statistics Chart
+        const activityCtx = document.getElementById('activityChart').getContext('2d');
+        const activityChart = new Chart(activityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.ActivityStatistics.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    label: 'Activity Count',
+                    data: [@string.Join(",", Model.ActivityStatistics.Values)],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // Popular Card Styles Chart
+        const styleCtx = document.getElementById('styleChart').getContext('2d');
+        const styleChart = new Chart(styleCtx, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.PopularCardStyles.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    label: 'Usage Count',
+                    data: [@string.Join(",", Model.PopularCardStyles.Values)],
+                    backgroundColor: [@Html.Raw(string.Join(",", Model.PopularCardStyles.Keys.Select(k => $"'{k}'")))],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+@functions {
+    public string GetBadgeClass(string action)
+    {
+        return action switch
+        {
+            var a when a.Contains("Create") => "bg-success",
+            var a when a.Contains("Update") || a.Contains("Edit") => "bg-primary",
+            var a when a.Contains("Delete") || a.Contains("Remove") => "bg-danger",
+            var a when a.Contains("Login") || a.Contains("Logout") => "bg-info",
+            var a when a.Contains("Added") => "bg-success",
+            var a when a.Contains("Removed") => "bg-warning",
+            _ => "bg-secondary"
+        };
+    }
+}

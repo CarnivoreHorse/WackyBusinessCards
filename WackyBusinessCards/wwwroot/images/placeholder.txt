@@ -1,0 +1,2 @@
+This is a placeholder file to ensure the images directory exists.
+You can add actual image files here for the business cards.

@@ -1,0 +1,108 @@
+@model BusinessCard
+@{
+    ViewData["Title"] = $"Business Card - {Model.Name}";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Business Card Details</h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <partial name="_BusinessCardPartial" model="Model" />
+                    </div>
+
+                    <h4>Card Information</h4>
+                    <dl class="row">
+                        <dt class="col-sm-4">Name:</dt>
+                        <dd class="col-sm-8">@Model.Name</dd>
+
+                        <dt class="col-sm-4">Title:</dt>
+                        <dd class="col-sm-8">@Model.Title</dd>
+
+                        <dt class="col-sm-4">Company:</dt>
+                        <dd class="col-sm-8">@Model.Company</dd>
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+
+                        <dt class="col-sm-4">Phone:</dt>
+                        <dd class="col-sm-8">@Model.Phone</dd>
+
+                        <dt class="col-sm-4">Website:</dt>
+                        <dd class="col-sm-8">@Model.Website</dd>
+
+                        <dt class="col-sm-4">Address:</dt>
+                        <dd class="col-sm-8">@Model.Address</dd>
+                    </dl>
+
+                    <h4>Style Information</h4>
+                    <dl class="row">
+                        <dt class="col-sm-4">Background Color:</dt>
+                        <dd class="col-sm-8">
+                            <span class="color-sample" style="background-color: @Model.BackgroundColor"></span>
+                            @Model.BackgroundColor
+                        </dd>
+
+                        <dt class="col-sm-4">Text Color:</dt>
+                        <dd class="col-sm-8">
+                            <span class="color-sample" style="background-color: @Model.TextColor"></span>
+                            @Model.TextColor
+                        </dd>
+
+                        <dt class="col-sm-4">Font Family:</dt>
+                        <dd class="col-sm-8">@Model.FontFamily</dd>
+
+                        <dt class="col-sm-4">Border Style:</dt>
+                        <dd class="col-sm-8">@Model.BorderStyle</dd>
+
+                        <dt class="col-sm-4">Border Color:</dt>
+                        <dd class="col-sm-8">
+                            <span class="color-sample" style="background-color: @Model.BorderColor"></span>
+                            @Model.BorderColor
+                        </dd>
+
+                        <dt class="col-sm-4">Border Width:</dt>
+                        <dd class="col-sm-8">@Model.BorderWidth px</dd>
+
+                        <dt class="col-sm-4">Border Radius:</dt>
+                        <dd class="col-sm-8">@Model.BorderRadius px</dd>
+
+                        <dt class="col-sm-4">Special Effect:</dt>
+                        <dd class="col-sm-8">@Model.SpecialEffect</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    @if (ViewData["IsUserCard"] != null && (bool)ViewData["IsUserCard"])
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    }
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .color-sample {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            vertical-align: middle;
+        }
+    </style>
+}

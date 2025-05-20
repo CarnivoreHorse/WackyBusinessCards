@@ -1,0 +1,49 @@
+@model BusinessCard
+
+<div class="business-card" style="
+    background-color: @Model.BackgroundColor;
+    color: @Model.TextColor;
+    font-family: @Model.FontFamily;
+    border: @Model.BorderWidth px @Model.BorderStyle @Model.BorderColor;
+    border-radius: @Model.BorderRadius px;
+    transform: @(Model.SpecialEffect == "rotate" ? "rotate(-3deg)" : "none");
+    box-shadow: @(Model.SpecialEffect == "shadow" ? "5px 5px 15px rgba(0,0,0,0.4)" : "none");
+    animation: @(Model.SpecialEffect == "sparkle" ? "sparkle 2s infinite" : "none");
+    margin-bottom: 20px;
+    padding: 20px;
+    max-width: 350px;
+    min-height: 200px;
+    position: relative;
+    overflow: hidden;
+">
+    <div class="card-content">
+        <h3 class="card-name">@Model.Name</h3>
+        <p class="card-title">@Model.Title</p>
+        <p class="card-company">@Model.Company</p>
+        <hr />
+        <div class="card-contact">
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <p><i class="bi bi-envelope"></i> @Model.Email</p>
+            }
+            @if (!string.IsNullOrEmpty(Model.Phone))
+            {
+                <p><i class="bi bi-telephone"></i> @Model.Phone</p>
+            }
+            @if (!string.IsNullOrEmpty(Model.Website))
+            {
+                <p><i class="bi bi-globe"></i> @Model.Website</p>
+            }
+            @if (!string.IsNullOrEmpty(Model.Address))
+            {
+                <p><i class="bi bi-geo-alt"></i> @Model.Address</p>
+            }
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="card-image">
+            <img src="@Model.ImageUrl" alt="Card Image" />
+        </div>
+    }
+</div>

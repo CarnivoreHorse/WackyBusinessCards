@@ -1,0 +1,87 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/* Business Card Styles */
+.business-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.business-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+  z-index: 10;
+}
+
+.card-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.card-title {
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.card-company {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card-contact {
+  font-size: 0.9rem;
+}
+
+.card-contact p {
+  margin-bottom: 5px;
+}
+
+.card-image {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 60px;
+  height: 60px;
+  opacity: 0.2;
+}
+
+.card-image img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Special Effects */
+@keyframes sparkle {
+  0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+  100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+}
